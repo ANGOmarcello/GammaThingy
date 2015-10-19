@@ -84,15 +84,6 @@ static NSString * const ShortcutDisable = @"Disable";
     return YES;
 }
 
-- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
-    NSLog(@"App woke with fetch request");
-
-    
-    [GammaController autoChangeOrangenessIfNeeded];
-    
-    completionHandler(UIBackgroundFetchResultNewData);
-}
-
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
     NSLog(@"handling url");
     NSDictionary *dict = [self parseQueryString:[url query]];
@@ -149,6 +140,14 @@ static NSString * const ShortcutDisable = @"Disable";
     [[UIApplication sharedApplication] suspend];
     [self updateShortCutItem];
     completionHandler(handledShortCutItem);
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    // Refreshing every 15 minutes
+    [[UIApplication sharedApplication] setKeepAliveTimeout:900 handler:^{
+        NSLog(@"App woke with timeout");
+        [GammaController autoChangeOrangenessIfNeeded];
+    }];
 }
 
 @end
