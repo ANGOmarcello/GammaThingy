@@ -239,7 +239,8 @@ static BOOL firstExecution = YES;
     if (firstExecution) {
         if ([defaults boolForKey:@"enabled"]){
             NSLog(@"First execution activation was triggered");
-            [self enableOrangeness];
+            [self wakeUpScreenIfNeeded];
+            [GammaController setGammaWithTransitionFrom:0 to:[defaults floatForKey:@"maxOrange"]];
         } else {
             NSLog(@"First execution activation was NOT triggered");
         }
